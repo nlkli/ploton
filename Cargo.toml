@@ -1,0 +1,23 @@
+[package]
+name = "ploton"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+winit = "0.30.13" 
+wry = "0.57"
+
+[profile.dev]
+opt-level = 0
+debug = true
+incremental = true
+codegen-units = 256
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+debug = false
+incremental = false
