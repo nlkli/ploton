@@ -12,22 +12,30 @@ window.addEventListener('resize', function () {
     chart.resize();
 });
 
+type Event = { type: string, payload: any };
+
+declare global {
+    interface Window {
+        __PORTAL__: { dispatch(event: Event): void }
+    }
+}
+
+window.__PORTAL__ = {
+    dispatch(event) {
+        switch (event.type) {
+            case 'setChartOption':
+                chart.setOption(event.payload)
+                break
+        }
+    }
+}
+
 declare global {
     interface Window {
         ipc: {
             postMessage(message: any): void
         }
-
-        recvIpcMessage: (message: any) => void
-        setChartOption: (option: any) => void
     }
 }
 
 window.ipc.postMessage("init");
-
-window.recvIpcMessage = (_message) => {
-}
-
-window.setChartOption = (option) => {
-    chart.setOption(option)
-}
