@@ -82,7 +82,7 @@ pub struct Window {
 impl Default for Window {
     fn default() -> Self {
         Self {
-            title: "void".into(),
+            title: "ploton".into(),
             width: 800,
             height: 600,
             x: 0,
@@ -145,6 +145,7 @@ impl Window {
             .with_visible(w.visible)
             .with_decorations(w.decorations)
             .with_transparent(w.transparent)
+            .with_active(w.active)
             .with_blur(w.blur)
             .with_maximized(w.maximized)
             .with_fullscreen(if w.fullscreen {

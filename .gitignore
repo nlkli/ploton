@@ -1,6 +1,8 @@
 /target
 /resources
 
+default_option.js
+
 # Logs
 logs
 *.log
