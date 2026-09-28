@@ -2,10 +2,12 @@ mod app;
 mod cli;
 mod config;
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let args = cli::Args::parse();
-    if args.opt_paths.is_empty() {
-        return;
+    if args.files.is_empty() {
+        println!("{}", cli::HELP);
+        return Ok(());
     }
-    app::run(args, None).expect("app");
+    app::run(args, config::Config::default())
 }
+
