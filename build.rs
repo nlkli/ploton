@@ -1,31 +1,44 @@
-use std::{env, path::Path, process::Command};
+use std::{
+    env,
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 fn main() {
-    let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let app_dir = Path::new(&manifest_dir).join("web");
+    let web_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap()).join("web");
 
-    println!("cargo:rerun-if-changed=app/package.json");
-    println!("cargo:rerun-if-changed=app/package-lock.json");
-    println!("cargo:rerun-if-changed=app/index.html");
-    println!("cargo:rerun-if-changed=app/src");
-
-    let status = Command::new("npm")
-        .arg("run")
-        .arg("build")
-        .current_dir(&app_dir)
-        .status()
-        .expect("failed to execute `npm run build`");
-
-    if !status.success() {
-        panic!("frontend build failed");
+    for path in [
+        "package.json",
+        "package-lock.json",
+        "index.html",
+        "vite.config.ts",
+        "tsconfig.json",
+        "src",
+    ] {
+        println!("cargo:rerun-if-changed=web/{path}");
     }
 
-    let index = app_dir.join("dist/index.html");
-
-    if !index.exists() {
-        panic!(
-            "frontend build succeeded, but {} was not created",
-            index.display()
-        );
+    // Install dependencies on a fresh checkout.
+    if !web_dir.join("node_modules").exists() {
+        npm(&web_dir, &["ci"]);
     }
+    npm(&web_dir, &["run", "build"]);
+
+    let index = web_dir.join("dist/index.html");
+    assert!(
+        index.exists(),
+        "frontend build succeeded, but {} was not created",
+        index.display()
+    );
 }
+
+fn npm(dir: &Path, args: &[&str]) {
+    let program = if cfg!(windows) { "npm.cmd" } else { "npm" };
+    let status = Command::new(program)
+        .args(args)
+        .current_dir(dir)
+        .status()
+        .unwrap_or_else(|e| panic!("failed to run `npm {}`: {e}", args.join(" ")));
+    assert!(status.success(), "`npm {}` failed", args.join(" "));
+}
+

@@ -2,6 +2,8 @@
 
 Render [ECharts](https://echarts.apache.org) options and CSV datasets in a native window.
 
+![demo](https://github.com/nlkli/assetsrepo/blob/main/ploton.demo/first.gif)
+
 ## Usage
 
 ```
@@ -14,8 +16,7 @@ ploton [OPTIONS] <FILE>...
 ```
 
 ```sh
-ploton option.js
-ploton -w data.csv      # live reload
+ploton -w option.js -w data.csv  # live reload
 ```
 
 - `.csv` files become a dataset; the first row is the header.
