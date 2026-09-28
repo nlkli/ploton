@@ -4,6 +4,8 @@ Render [ECharts](https://echarts.apache.org) options and CSV datasets in a nativ
 
 ![demo](https://github.com/nlkli/assetsrepo/blob/main/ploton.demo/first.gif)
 
+**[Demo & Examples](https://echarts.apache.org/examples/en/index.html)**
+
 ## Usage
 
 ```
